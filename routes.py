@@ -11,9 +11,22 @@ from ai_agent import agente_boas_vindas, processar_mensagem, analisar_sentimento
 from notification import enviar_sms, notificar_administrador, notificar_novo_lead, notificar_potencial_conversao
 from scheduler import iniciar_scheduler
 
-# Iniciar o scheduler quando a aplicação iniciar
-with app.app_context():
-    iniciar_scheduler()
+# Iniciar o scheduler quando a aplicação iniciar somente em produção
+# Usando variável para evitar múltiplas inicializações
+_scheduler_iniciado = False
+
+def init_scheduler():
+    global _scheduler_iniciado
+    if not _scheduler_iniciado:
+        try:
+            with app.app_context():
+                iniciar_scheduler()
+                _scheduler_iniciado = True
+        except Exception as e:
+            logger.error(f"Erro ao iniciar o scheduler: {str(e)}")
+            
+# Não iniciar o scheduler aqui para evitar conflitos - será iniciado
+# quando o servidor estiver completamente carregado
 
 logger = logging.getLogger(__name__)
 

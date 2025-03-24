@@ -146,24 +146,49 @@ def verificar_leads_inativos():
     except Exception as e:
         logger.error(f"Erro ao verificar leads inativos: {str(e)}")
 
+_scheduler_iniciado = False
+
 def iniciar_scheduler():
     """Inicia o agendador de tarefas"""
-    scheduler.add_job(
-        verificar_formularios_pendentes, 
-        'interval', 
-        hours=24, 
-        id='verificar_formularios_pendentes'
-    )
+    global _scheduler_iniciado
     
-    scheduler.add_job(
-        verificar_leads_inativos, 
-        'interval', 
-        hours=24, 
-        id='verificar_leads_inativos'
-    )
+    if _scheduler_iniciado:
+        logger.info("Agendador de tarefas já estava iniciado")
+        return
     
-    scheduler.start()
-    logger.info("Agendador de tarefas iniciado")
+    try:
+        # Verificar se já existem jobs com esses IDs e removê-los
+        for job_id in ['verificar_formularios_pendentes', 'verificar_leads_inativos']:
+            try:
+                scheduler.remove_job(job_id)
+                logger.info(f"Job existente removido: {job_id}")
+            except:
+                pass  # Job não existia
+        
+        scheduler.add_job(
+            verificar_formularios_pendentes, 
+            'interval', 
+            hours=24, 
+            id='verificar_formularios_pendentes',
+            replace_existing=True
+        )
+        
+        scheduler.add_job(
+            verificar_leads_inativos, 
+            'interval', 
+            hours=24, 
+            id='verificar_leads_inativos',
+            replace_existing=True
+        )
+        
+        scheduler.start()
+        _scheduler_iniciado = True
+        logger.info("Agendador de tarefas iniciado")
+    except Exception as e:
+        logger.error(f"Erro ao iniciar agendador: {str(e)}")
+        # Se o erro for porque o scheduler já está rodando, apenas marcamos como iniciado
+        if "already running" in str(e):
+            _scheduler_iniciado = True
 
 def parar_scheduler():
     """Para o agendador de tarefas"""

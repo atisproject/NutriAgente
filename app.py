@@ -36,6 +36,8 @@ login_manager.login_view = 'login'
 
 # Importa as rotas
 from routes import *
+# Importa as rotas do WhatsApp
+from whatsapp_routes import *
 
 with app.app_context():
     # Importa os modelos para a criação de tabelas

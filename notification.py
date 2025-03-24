@@ -9,7 +9,31 @@ TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = os.environ.get("TWILIO_PHONE_NUMBER")
 ADMIN_PHONE_NUMBER = "61985870944"  # Número específico para notificações
 
+# Inicializar o cliente Twilio
+twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
 logger = logging.getLogger(__name__)
+
+def formatar_numero_internacional(numero):
+    """
+    Formata um número para o padrão internacional (+55)
+    
+    Args:
+        numero (str): Número de telefone
+        
+    Returns:
+        str: Número no formato internacional
+    """
+    # Se já estiver no formato internacional, retorna como está
+    if numero.startswith('+'):
+        return numero
+    
+    # Se começar com 0, remove o 0 e adiciona +55
+    if numero.startswith('0'):
+        return '+55' + numero[1:]
+    
+    # Apenas adiciona +55
+    return '+55' + numero
 
 def enviar_sms(numero_destino, mensagem):
     """
@@ -28,44 +52,75 @@ def enviar_sms(numero_destino, mensagem):
             logger.error("Credenciais da Twilio não configuradas")
             return False
         
-        # Inicializar o cliente Twilio
-        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        
-        # Certificar que o número de telefone está no formato internacional
-        if not numero_destino.startswith('+'):
-            # Formato brasileiro (+55)
-            if numero_destino.startswith('0'):
-                numero_destino = '+55' + numero_destino[1:]
-            else:
-                numero_destino = '+55' + numero_destino
+        # Formatar o número
+        numero_destino = formatar_numero_internacional(numero_destino)
         
         # Enviar a mensagem
-        message = client.messages.create(
+        message = twilio_client.messages.create(
             body=mensagem,
             from_=TWILIO_PHONE_NUMBER,
             to=numero_destino
         )
         
-        logger.info(f"Mensagem enviada com sucesso. SID: {message.sid}")
+        logger.info(f"SMS enviado com sucesso. SID: {message.sid}")
         return True
         
     except Exception as e:
         logger.error(f"Erro ao enviar SMS: {str(e)}")
         return False
 
-def notificar_administrador(assunto, conteudo):
+def enviar_whatsapp(numero_destino, mensagem):
+    """
+    Envia uma mensagem WhatsApp utilizando a API do Twilio
+    
+    Args:
+        numero_destino (str): Número de telefone de destino
+        mensagem (str): Conteúdo da mensagem a ser enviada
+    
+    Returns:
+        bool: True se a mensagem foi enviada com sucesso, False caso contrário
+    """
+    try:
+        # Verificar se as credenciais da Twilio estão configuradas
+        if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_PHONE_NUMBER:
+            logger.error("Credenciais da Twilio não configuradas")
+            return False
+        
+        # Formatar o número
+        numero_destino = formatar_numero_internacional(numero_destino)
+        
+        # Enviar a mensagem via WhatsApp
+        message = twilio_client.messages.create(
+            body=mensagem,
+            from_=f'whatsapp:{TWILIO_PHONE_NUMBER}',
+            to=f'whatsapp:{numero_destino}'
+        )
+        
+        logger.info(f"WhatsApp enviado com sucesso. SID: {message.sid}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Erro ao enviar WhatsApp: {str(e)}")
+        return False
+
+def notificar_administrador(assunto, conteudo, via_whatsapp=True):
     """
     Envia uma notificação para o número do administrador
     
     Args:
         assunto (str): Assunto da notificação
         conteudo (str): Conteúdo detalhado da notificação
+        via_whatsapp (bool): Se True, envia por WhatsApp, senão por SMS
     
     Returns:
         bool: True se a notificação foi enviada com sucesso, False caso contrário
     """
     mensagem = f"NutriAI - {assunto}\n\n{conteudo}"
-    return enviar_sms(ADMIN_PHONE_NUMBER, mensagem)
+    
+    if via_whatsapp:
+        return enviar_whatsapp(ADMIN_PHONE_NUMBER, mensagem)
+    else:
+        return enviar_sms(ADMIN_PHONE_NUMBER, mensagem)
 
 def notificar_novo_lead(nome, telefone):
     """
