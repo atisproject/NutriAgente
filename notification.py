@@ -89,8 +89,8 @@ def enviar_whatsapp(numero_destino, mensagem):
         # Formatar o número
         numero_destino = formatar_numero_internacional(numero_destino)
         
-        # Para a Sandbox do Twilio WhatsApp - número fixo Twilio
-        from_whatsapp_number = 'whatsapp:+14155238886'  # Número padrão da sandbox WhatsApp da Twilio
+        # Para a Sandbox do Twilio WhatsApp - número configurado
+        from_whatsapp_number = 'whatsapp:+15707553921'  # Número da sandbox WhatsApp da Twilio
         
         # Enviar a mensagem via WhatsApp
         message = twilio_client.messages.create(

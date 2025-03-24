@@ -94,3 +94,21 @@ def whatsapp_configuracao():
     
     # Por enquanto, apenas redireciona para a página principal de configurações
     return render_template('configuracoes.html')
+
+@app.route('/instrucoes-whatsapp', methods=['GET'])
+def instrucoes_whatsapp():
+    """
+    Página com instruções para uso do WhatsApp Sandbox
+    
+    Esta rota exibe instruções para que os usuários possam se inscrever
+    no sandbox do WhatsApp da Twilio e começar a usar o sistema.
+    """
+    # Número do WhatsApp da Sandbox
+    whatsapp_numero = '+15707553921'
+    
+    # Código de opt-in (normalmente "join <palavra>" para o sandbox da Twilio)
+    codigo_optin = 'join solution-plenty'
+    
+    return render_template('instrucoes_whatsapp.html', 
+                          whatsapp_numero=whatsapp_numero,
+                          codigo_optin=codigo_optin)

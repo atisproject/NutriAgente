@@ -37,8 +37,8 @@ def enviar_mensagem_whatsapp(numero_destino, mensagem):
         # Inicializar o cliente Twilio
         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
         
-        # Para a Sandbox do Twilio WhatsApp - número fixo Twilio
-        from_whatsapp_number = 'whatsapp:+14155238886'  # Número padrão da sandbox WhatsApp da Twilio
+        # Para a Sandbox do Twilio WhatsApp - número configurado
+        from_whatsapp_number = 'whatsapp:+15707553921'  # Número da sandbox WhatsApp da Twilio
         
         # Enviar mensagem via WhatsApp
         message = client.messages.create(
