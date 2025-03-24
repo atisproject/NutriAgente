@@ -45,17 +45,27 @@ def verificar_formularios_pendentes():
             Formulario.data_envio <= data_limite
         ).all()
         
+        # Verificar se há uma configuração para canal preferido
+        config_canal = Configuracao.query.filter_by(chave='canal_notificacao_padrao').first()
+        canal_padrao = config_canal.valor if config_canal else 'sms'
+        
         for formulario in formularios:
             try:
                 lead = Lead.query.get(formulario.lead_id)
                 if not lead:
                     continue
                 
+                # Determinar o canal de comunicação para este lead
+                canal = 'whatsapp' if lead.fonte == 'whatsapp' else canal_padrao
+                
                 # Gerar mensagem de lembrete personalizada
                 mensagem = gerar_lembrete_formulario(lead.id, formulario.tipo)
                 
-                # Enviar SMS para o cliente
-                envio_sucesso = enviar_sms(lead.telefone, mensagem)
+                # Enviar mensagem pelo canal apropriado
+                if canal == 'whatsapp':
+                    envio_sucesso = enviar_whatsapp(lead.telefone, mensagem)
+                else:
+                    envio_sucesso = enviar_sms(lead.telefone, mensagem)
                 
                 if envio_sucesso:
                     # Registrar a interação
@@ -74,7 +84,7 @@ def verificar_formularios_pendentes():
                     dias_pendente = (datetime.utcnow() - formulario.data_envio).days
                     notificar_formulario_pendente(lead.nome, lead.telefone, formulario.tipo, dias_pendente)
                     
-                    logger.info(f"Lembrete enviado para {lead.nome} sobre formulário {formulario.tipo}")
+                    logger.info(f"Lembrete enviado para {lead.nome} via {canal} sobre formulário {formulario.tipo}")
             
             except Exception as e:
                 logger.error(f"Erro ao processar formulário {formulario.id}: {str(e)}")
@@ -102,6 +112,10 @@ def verificar_leads_inativos():
             Interacao.data_hora <= data_limite
         ).group_by(Lead.id).all()
         
+        # Verificar se há uma configuração para canal preferido
+        config_canal = Configuracao.query.filter_by(chave='canal_notificacao_padrao').first()
+        canal_padrao = config_canal.valor if config_canal else 'sms'
+        
         for lead in leads_inativos:
             try:
                 # Verificar se já tem uma interação de reativação recente
@@ -115,6 +129,9 @@ def verificar_leads_inativos():
                 if interacao_recente:
                     continue
                 
+                # Determinar o canal de comunicação para este lead
+                canal = 'whatsapp' if lead.fonte == 'whatsapp' else canal_padrao
+                
                 # Gerar mensagem de reativação
                 mensagem = (
                     f"Olá {lead.nome}, sentimos sua falta! Gostaríamos de continuar "
@@ -123,8 +140,11 @@ def verificar_leads_inativos():
                     f"Como podemos ajudar?"
                 )
                 
-                # Enviar SMS
-                envio_sucesso = enviar_sms(lead.telefone, mensagem)
+                # Enviar pelo canal apropriado
+                if canal == 'whatsapp':
+                    envio_sucesso = enviar_whatsapp(lead.telefone, mensagem)
+                else:
+                    envio_sucesso = enviar_sms(lead.telefone, mensagem)
                 
                 if envio_sucesso:
                     # Registrar a interação
@@ -136,7 +156,7 @@ def verificar_leads_inativos():
                     db.session.add(nova_interacao)
                     db.session.commit()
                     
-                    logger.info(f"Mensagem de reativação enviada para {lead.nome}")
+                    logger.info(f"Mensagem de reativação enviada para {lead.nome} via {canal}")
             
             except Exception as e:
                 logger.error(f"Erro ao processar lead inativo {lead.id}: {str(e)}")

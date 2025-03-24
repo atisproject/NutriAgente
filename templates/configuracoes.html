@@ -184,6 +184,14 @@
                                     <label for="config_telefone_notificacoes" class="form-label">Telefone para Notificações</label>
                                     <input type="tel" class="form-control" id="config_telefone_notificacoes" name="config_telefone_notificacoes" value="{{ configuracoes|selectattr('chave', 'equalto', 'telefone_notificacoes')|map(attribute='valor')|first|default('61985870944') }}">
                                 </div>
+                                <div class="mb-3">
+                                    <label for="config_canal_notificacao_padrao" class="form-label">Canal de Comunicação Padrão</label>
+                                    <select class="form-select" id="config_canal_notificacao_padrao" name="config_canal_notificacao_padrao">
+                                        <option value="sms" {% if configuracoes|selectattr('chave', 'equalto', 'canal_notificacao_padrao')|map(attribute='valor')|first|default('sms') == 'sms' %}selected{% endif %}>SMS</option>
+                                        <option value="whatsapp" {% if configuracoes|selectattr('chave', 'equalto', 'canal_notificacao_padrao')|map(attribute='valor')|first|default('sms') == 'whatsapp' %}selected{% endif %}>WhatsApp</option>
+                                    </select>
+                                    <div class="form-text">Canal preferencial para comunicação com leads. Isso pode ser sobrescrito pela origem do lead.</div>
+                                </div>
                                 <div class="mb-3 form-check">
                                     <input type="checkbox" class="form-check-input" id="config_notificar_novos_leads" name="config_notificar_novos_leads" value="sim" {% if configuracoes|selectattr('chave', 'equalto', 'notificar_novos_leads')|map(attribute='valor')|first|default('sim') == 'sim' %}checked{% endif %}>
                                     <label class="form-check-label" for="config_notificar_novos_leads">Notificar novos leads</label>
