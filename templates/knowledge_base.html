@@ -1,0 +1,255 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-brain me-2"></i>Base de Conhecimento</h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoItemModal">
+            <i class="fas fa-plus me-1"></i> Novo Item
+        </button>
+    </div>
+    
+    <!-- Filtros e busca -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Tipo</label>
+                    <select class="form-select" id="filtroTipo">
+                        <option value="">Todos</option>
+                        <option value="faq">FAQ</option>
+                        <option value="produto">Produto</option>
+                        <option value="nutricional">Nutricional</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Busca</label>
+                    <input type="text" class="form-control" id="buscaConhecimento" placeholder="Buscar por tema ou conteúdo...">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100" id="btnFiltrarConhecimento">
+                        <i class="fas fa-search me-1"></i> Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Lista de itens da base de conhecimento -->
+    <div class="row">
+        {% if items %}
+            {% for item in items %}
+            <div class="col-lg-6 mb-4 item-conhecimento" data-tipo="{{ item.tipo }}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ item.tema }}</h5>
+                        <span class="badge rounded-pill bg-{{ 'primary' if item.tipo == 'faq' else 'success' if item.tipo == 'produto' else 'info' }}">
+                            {{ item.tipo.title() }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ item.conteudo|truncate(200) }}</p>
+                        <div class="text-muted small mb-2">
+                            <i class="fas fa-calendar-alt me-1"></i> Atualizado em: {{ item.atualizado_em.strftime('%d/%m/%Y') }}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100">
+                            <button class="btn btn-sm btn-outline-primary" onclick="visualizarItem({{ item.id }}, '{{ item.tema }}', '{{ item.conteudo|replace('\n', ' ')|replace("'", "\\'") }}', '{{ item.tipo }}')">
+                                <i class="fas fa-eye me-1"></i> Visualizar
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning" onclick="editarItem({{ item.id }}, '{{ item.tema }}', '{{ item.conteudo|replace('\n', ' ')|replace("'", "\\'") }}', '{{ item.tipo }}')">
+                                <i class="fas fa-edit me-1"></i> Editar
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="excluirItem({{ item.id }}, '{{ item.tema }}')">
+                                <i class="fas fa-trash-alt me-1"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle fa-2x mb-3"></i>
+                    <p>Não há itens na base de conhecimento. Clique em "Novo Item" para adicionar.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal Novo Item -->
+<div class="modal fade" id="novoItemModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus-circle me-2"></i>Novo Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formNovoItem" action="{{ url_for('base_conhecimento') }}" method="post">
+                    <input type="hidden" id="item_id" name="item_id">
+                    <div class="mb-3">
+                        <label for="tema" class="form-label">Tema*</label>
+                        <input type="text" class="form-control" id="tema" name="tema" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label">Tipo*</label>
+                        <select class="form-select" id="tipo" name="tipo" required>
+                            <option value="faq">FAQ</option>
+                            <option value="produto">Produto</option>
+                            <option value="nutricional">Nutricional</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="conteudo" class="form-label">Conteúdo*</label>
+                        <textarea class="form-control" id="conteudo" name="conteudo" rows="8" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="formNovoItem" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Visualizar Item -->
+<div class="modal fade" id="visualizarItemModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="visualizarTitulo"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">
+                    <span class="badge rounded-pill" id="visualizarTipo"></span>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <p id="visualizarConteudo" class="mb-0"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-warning" id="btnEditarItemModal">
+                    <i class="fas fa-edit me-1"></i> Editar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmação Excluir -->
+<div class="modal fade" id="excluirItemModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle text-danger me-2"></i>Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Você tem certeza que deseja excluir o item <strong id="excluirItemNome"></strong>?</p>
+                <p class="text-danger">Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form action="{{ url_for('base_conhecimento') }}" method="post" id="formExcluirItem">
+                    <input type="hidden" name="acao" value="excluir">
+                    <input type="hidden" id="excluirItemId" name="item_id">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-1"></i> Excluir
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Filtrar itens
+    document.getElementById('btnFiltrarConhecimento').addEventListener('click', function() {
+        const tipo = document.getElementById('filtroTipo').value;
+        const busca = document.getElementById('buscaConhecimento').value.toLowerCase();
+        
+        const items = document.querySelectorAll('.item-conhecimento');
+        
+        items.forEach(item => {
+            const itemTipo = item.dataset.tipo;
+            const itemConteudo = item.querySelector('.card-text').textContent.toLowerCase();
+            const itemTema = item.querySelector('.card-header h5').textContent.toLowerCase();
+            
+            const matchTipo = tipo === '' || itemTipo === tipo;
+            const matchBusca = busca === '' || itemConteudo.includes(busca) || itemTema.includes(busca);
+            
+            if (matchTipo && matchBusca) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+    
+    // Funções para os modais
+    function visualizarItem(id, tema, conteudo, tipo) {
+        document.getElementById('visualizarTitulo').textContent = tema;
+        document.getElementById('visualizarConteudo').textContent = conteudo;
+        
+        const tipoElement = document.getElementById('visualizarTipo');
+        tipoElement.textContent = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+        
+        if (tipo === 'faq') {
+            tipoElement.className = 'badge rounded-pill bg-primary';
+        } else if (tipo === 'produto') {
+            tipoElement.className = 'badge rounded-pill bg-success';
+        } else {
+            tipoElement.className = 'badge rounded-pill bg-info';
+        }
+        
+        // Configurar botão de edição
+        document.getElementById('btnEditarItemModal').onclick = function() {
+            bootstrap.Modal.getInstance(document.getElementById('visualizarItemModal')).hide();
+            editarItem(id, tema, conteudo, tipo);
+        };
+        
+        const modal = new bootstrap.Modal(document.getElementById('visualizarItemModal'));
+        modal.show();
+    }
+    
+    function editarItem(id, tema, conteudo, tipo) {
+        document.getElementById('item_id').value = id;
+        document.getElementById('tema').value = tema;
+        document.getElementById('conteudo').value = conteudo;
+        document.getElementById('tipo').value = tipo;
+        
+        document.querySelector('#novoItemModal .modal-title').innerHTML = '<i class="fas fa-edit me-2"></i>Editar Item';
+        
+        const modal = new bootstrap.Modal(document.getElementById('novoItemModal'));
+        modal.show();
+    }
+    
+    function excluirItem(id, tema) {
+        document.getElementById('excluirItemId').value = id;
+        document.getElementById('excluirItemNome').textContent = tema;
+        
+        const modal = new bootstrap.Modal(document.getElementById('excluirItemModal'));
+        modal.show();
+    }
+    
+    // Reset do formulário quando abrir o modal para novo item
+    document.getElementById('novoItemModal').addEventListener('hidden.bs.modal', function () {
+        document.getElementById('formNovoItem').reset();
+        document.getElementById('item_id').value = '';
+        document.querySelector('#novoItemModal .modal-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Novo Item';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="error-container">
+                <div class="error-code">
+                    <i class="fas fa-exclamation-triangle text-danger fa-3x mb-4"></i>
+                    <h1 class="display-1 fw-bold text-danger">500</h1>
+                </div>
+                <h2 class="mb-4">Erro interno no servidor</h2>
+                <p class="lead mb-5">
+                    Desculpe, ocorreu um erro interno no servidor. Nossa equipe foi notificada e está trabalhando para resolver o problema.
+                </p>
+                
+                <div class="error-actions">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-2"></i> Voltar para a página inicial
+                    </a>
+                    
+                    <button onclick="window.location.reload()" class="btn btn-outline-secondary btn-lg ms-2">
+                        <i class="fas fa-sync-alt me-2"></i> Tentar novamente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

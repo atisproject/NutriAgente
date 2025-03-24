@@ -1,0 +1,525 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('leads') }}">Leads</a></li>
+            <li class="breadcrumb-item active">{{ lead.nome }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Informações do Lead -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Informações do Lead</h5>
+                    <button class="btn btn-sm btn-outline-warning" onclick="editarLead({{ lead.id }})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar-circle bg-{{ 'success' if lead.status == 'convertido' else 'primary' if lead.status == 'em_contato' else 'warning' if lead.status == 'novo' else 'danger' }} mx-auto" style="width: 80px; height: 80px; font-size: 2rem;">
+                            {{ lead.nome[:1].upper() }}
+                        </div>
+                        <h4 class="mt-3">{{ lead.nome }}</h4>
+                        <span class="badge rounded-pill bg-{{ 'success' if lead.status == 'convertido' else 'primary' if lead.status == 'em_contato' else 'warning' if lead.status == 'novo' else 'danger' }}">
+                            {{ lead.status.replace('_', ' ').title() }}
+                        </span>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6><i class="fas fa-phone-alt me-2"></i>Telefone</h6>
+                        <p>{{ lead.telefone }}</p>
+                    </div>
+
+                    {% if lead.email %}
+                    <div class="mb-3">
+                        <h6><i class="fas fa-envelope me-2"></i>Email</h6>
+                        <p>{{ lead.email }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <h6><i class="fas fa-tag me-2"></i>Fonte</h6>
+                        <p>{{ lead.fonte.title() if lead.fonte else 'Não informado' }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6><i class="fas fa-calendar-alt me-2"></i>Data de Cadastro</h6>
+                        <p>{{ lead.criado_em.strftime('%d/%m/%Y %H:%M') }}</p>
+                    </div>
+
+                    {% if lead.user_id %}
+                    <div class="mb-3">
+                        <h6><i class="fas fa-user-tie me-2"></i>Atendente</h6>
+                        <p>{{ lead.atendente.username }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group w-100">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#enviarMensagemModal">
+                            <i class="fas fa-comment me-1"></i> Mensagem
+                        </button>
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#enviarFormularioModal">
+                            <i class="fas fa-file-alt me-1"></i> Formulário
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat e Interações -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-comments me-2"></i>Conversa</h5>
+                </div>
+                <div class="card-body d-flex flex-column p-0">
+                    <!-- Container do Chat -->
+                    <div class="chat-container flex-grow-1 pb-0">
+                        {% if interacoes %}
+                            {% for interacao in interacoes %}
+                                <div class="chat-message {{ interacao.origem }}">
+                                    <div>
+                                        {% if interacao.origem == 'usuario' %}
+                                            <i class="fas fa-user me-2"></i>
+                                        {% elif interacao.origem == 'ia' %}
+                                            <i class="fas fa-robot me-2"></i>
+                                        {% else %}
+                                            <i class="fas fa-cog me-2"></i>
+                                        {% endif %}
+                                        {{ interacao.mensagem }}
+                                    </div>
+                                    <span class="chat-message-time">{{ interacao.data_hora.strftime('%d/%m/%Y %H:%M') }}</span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center my-5 text-muted">
+                                <i class="fas fa-comments fa-3x mb-3"></i>
+                                <p>Ainda não há interações com este lead.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Formulário do Chat -->
+                    <div class="card-footer bg-transparent border-top mt-auto">
+                        <form id="chat-form" class="d-flex">
+                            <input type="hidden" id="lead-id" value="{{ lead.id }}">
+                            <input type="text" id="chat-input" class="form-control" placeholder="Digite sua mensagem..." aria-label="Mensagem">
+                            <button type="submit" id="send-button" class="btn btn-primary ms-2">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulários e Histórico -->
+    <div class="row">
+        <!-- Formulários -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Formulários</h5>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#enviarFormularioModal">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    {% if formularios %}
+                        <div class="list-group">
+                            {% for formulario in formularios %}
+                                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ formulario.tipo.replace('_', ' ').title() }}</h6>
+                                        <small>
+                                            <i class="fas fa-calendar-alt me-1"></i> Enviado: {{ formulario.data_envio.strftime('%d/%m/%Y') }}
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <span class="badge rounded-pill bg-{{ 'success' if formulario.status == 'respondido' else 'warning' if formulario.status == 'pendente' else 'danger' }}">
+                                            {{ formulario.status.title() }}
+                                        </span>
+                                        {% if formulario.lembrete_enviado %}
+                                            <span class="badge bg-info ms-1" data-bs-toggle="tooltip" data-bs-title="Lembrete enviado">
+                                                <i class="fas fa-bell"></i>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-clipboard fa-3x mb-3 text-muted"></i>
+                            <p>Nenhum formulário enviado para este lead.</p>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#enviarFormularioModal">
+                                <i class="fas fa-plus me-1"></i> Enviar Formulário
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline de Atividades -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Histórico de Atividades</h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        {% if interacoes %}
+                            {% for interacao in interacoes[:5] %}
+                                <div class="timeline-item">
+                                    <div class="timeline-icon bg-{{ 'primary' if interacao.origem == 'usuario' else 'success' if interacao.origem == 'ia' else 'warning' }}">
+                                        {% if interacao.origem == 'usuario' %}
+                                            <i class="fas fa-user"></i>
+                                        {% elif interacao.origem == 'ia' %}
+                                            <i class="fas fa-robot"></i>
+                                        {% else %}
+                                            <i class="fas fa-cog"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="d-flex justify-content-between">
+                                            <h6>
+                                                {% if interacao.origem == 'usuario' %}
+                                                    Mensagem do Cliente
+                                                {% elif interacao.origem == 'ia' %}
+                                                    Resposta do NutriAI
+                                                {% else %}
+                                                    Ação do Sistema
+                                                {% endif %}
+                                            </h6>
+                                            <small class="text-muted">{{ interacao.data_hora.strftime('%d/%m/%Y %H:%M') }}</small>
+                                        </div>
+                                        <p class="mb-0">{{ interacao.mensagem|truncate(100) }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% if interacoes|length > 5 %}
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#historicoCompletoModal">
+                                        Ver histórico completo
+                                    </button>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-history fa-3x mb-3 text-muted"></i>
+                                <p>Não há atividades registradas para este lead.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Enviar Mensagem -->
+<div class="modal fade" id="enviarMensagemModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-comment me-2"></i>Enviar Mensagem</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEnviarMensagem">
+                    <input type="hidden" id="leadIdMensagem" value="{{ lead.id }}">
+                    <div class="mb-3">
+                        <label for="mensagemTexto" class="form-label">Mensagem</label>
+                        <textarea class="form-control" id="mensagemTexto" rows="4" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="confirmarEnvioMensagem()">
+                    <i class="fas fa-paper-plane me-1"></i> Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Enviar Formulário -->
+<div class="modal fade" id="enviarFormularioModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-file-alt me-2"></i>Enviar Formulário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEnviarFormulario">
+                    <input type="hidden" id="leadIdFormulario" value="{{ lead.id }}">
+                    <div class="mb-3">
+                        <label for="tipoFormulario" class="form-label">Tipo de Formulário</label>
+                        <select class="form-select" id="tipoFormulario" required>
+                            <option value="">Selecione...</option>
+                            <option value="avaliacao_fisica">Avaliação Física</option>
+                            <option value="anamnese_nutricional">Anamnese Nutricional</option>
+                            <option value="habitos_alimentares">Hábitos Alimentares</option>
+                            <option value="historico_saude">Histórico de Saúde</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="confirmarEnvioFormulario()">
+                    <i class="fas fa-paper-plane me-1"></i> Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Histórico Completo -->
+<div class="modal fade" id="historicoCompletoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-history me-2"></i>Histórico Completo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Origem</th>
+                                <th>Mensagem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for interacao in interacoes %}
+                                <tr>
+                                    <td>{{ interacao.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>
+                                        {% if interacao.origem == 'usuario' %}
+                                            <span class="badge bg-primary">Cliente</span>
+                                        {% elif interacao.origem == 'ia' %}
+                                            <span class="badge bg-success">NutriAI</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Sistema</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ interacao.mensagem }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Lead -->
+<div class="modal fade" id="editarLeadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Editar Lead</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarLead">
+                    <input type="hidden" id="editLeadId" value="{{ lead.id }}">
+                    <div class="mb-3">
+                        <label for="editNome" class="form-label">Nome Completo*</label>
+                        <input type="text" class="form-control" id="editNome" value="{{ lead.nome }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTelefone" class="form-label">Telefone*</label>
+                        <input type="tel" class="form-control" id="editTelefone" value="{{ lead.telefone }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">E-mail</label>
+                        <input type="email" class="form-control" id="editEmail" value="{{ lead.email }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStatus" class="form-label">Status</label>
+                        <select class="form-select" id="editStatus">
+                            <option value="novo" {% if lead.status == 'novo' %}selected{% endif %}>Novo</option>
+                            <option value="em_contato" {% if lead.status == 'em_contato' %}selected{% endif %}>Em Contato</option>
+                            <option value="convertido" {% if lead.status == 'convertido' %}selected{% endif %}>Convertido</option>
+                            <option value="perdido" {% if lead.status == 'perdido' %}selected{% endif %}>Perdido</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFonte" class="form-label">Fonte</label>
+                        <select class="form-select" id="editFonte">
+                            <option value="site" {% if lead.fonte == 'site' %}selected{% endif %}>Site</option>
+                            <option value="indicacao" {% if lead.fonte == 'indicacao' %}selected{% endif %}>Indicação</option>
+                            <option value="campanha" {% if lead.fonte == 'campanha' %}selected{% endif %}>Campanha</option>
+                            <option value="outros" {% if lead.fonte == 'outros' %}selected{% endif %}>Outros</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="salvarEdicaoLead()">
+                    <i class="fas fa-save me-1"></i> Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script>
+    // Função para confirmar o envio da mensagem
+    function confirmarEnvioMensagem() {
+        const leadId = document.getElementById('leadIdMensagem').value;
+        const mensagem = document.getElementById('mensagemTexto').value;
+        
+        if (!mensagem) {
+            alert('Por favor, escreva uma mensagem.');
+            return;
+        }
+        
+        // Enviar a mensagem via API
+        fetch('/api/enviar_mensagem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                lead_id: leadId,
+                mensagem: mensagem
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                alert('Mensagem enviada com sucesso!');
+                document.getElementById('mensagemTexto').value = '';
+                bootstrap.Modal.getInstance(document.getElementById('enviarMensagemModal')).hide();
+                // Recarregar a página para atualizar as interações
+                window.location.reload();
+            } else {
+                alert('Erro ao enviar mensagem: ' + data.mensagem);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao enviar mensagem. Tente novamente.');
+        });
+    }
+    
+    // Função para confirmar o envio do formulário
+    function confirmarEnvioFormulario() {
+        const leadId = document.getElementById('leadIdFormulario').value;
+        const tipo = document.getElementById('tipoFormulario').value;
+        
+        if (!tipo) {
+            alert('Por favor, selecione um tipo de formulário.');
+            return;
+        }
+        
+        // Enviar formulário via API
+        fetch('/api/enviar_formulario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                lead_id: leadId,
+                tipo: tipo
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                alert('Formulário enviado com sucesso!');
+                document.getElementById('tipoFormulario').value = '';
+                bootstrap.Modal.getInstance(document.getElementById('enviarFormularioModal')).hide();
+                // Recarregar a página para atualizar a lista de formulários
+                window.location.reload();
+            } else {
+                alert('Erro ao enviar formulário: ' + data.mensagem);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao enviar formulário. Tente novamente.');
+        });
+    }
+    
+    // Função para editar lead
+    function editarLead(leadId) {
+        const modal = new bootstrap.Modal(document.getElementById('editarLeadModal'));
+        modal.show();
+    }
+    
+    // Função para salvar as alterações do lead
+    function salvarEdicaoLead() {
+        const leadId = document.getElementById('editLeadId').value;
+        const nome = document.getElementById('editNome').value;
+        const email = document.getElementById('editEmail').value;
+        const telefone = document.getElementById('editTelefone').value;
+        const status = document.getElementById('editStatus').value;
+        const fonte = document.getElementById('editFonte').value;
+        
+        if (!nome || !telefone) {
+            alert('Por favor, preencha os campos obrigatórios.');
+            return;
+        }
+        
+        // Atualizar lead via API
+        fetch('/api/atualizar_lead', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                lead_id: leadId,
+                nome: nome,
+                email: email,
+                telefone: telefone,
+                status: status,
+                fonte: fonte
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                alert('Lead atualizado com sucesso!');
+                bootstrap.Modal.getInstance(document.getElementById('editarLeadModal')).hide();
+                // Recarregar a página para ver as alterações
+                window.location.reload();
+            } else {
+                alert('Erro ao atualizar lead: ' + data.mensagem);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao atualizar lead. Tente novamente.');
+        });
+    }
+    
+    // Inicializar tooltips
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach(t => new bootstrap.Tooltip(t));
+</script>
+{% endblock %}
