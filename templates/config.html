@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Configurações - Nutrição Saudável{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Configurações</h2>
+</div>
+
+<div class="row">
+    <!-- Configurações do Agente IA -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-robot me-2"></i> Agente de IA</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('config') }}" method="post" class="config-form">
+                    <div class="mb-3">
+                        <label for="welcome_message" class="form-label">Mensagem de Boas-Vindas</label>
+                        <textarea class="form-control" id="welcome_message" name="welcome_message" rows="4">{{ config.welcome_message if config else 'Olá! Sou o assistente virtual da Nutrição Saudável. Como posso ajudar você hoje?' }}</textarea>
+                        <div class="form-text">Mensagem exibida quando um novo cliente inicia a conversa.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="follow_up_hours" class="form-label">Tempo para Acompanhamento (horas)</label>
+                        <input type="number" class="form-control" id="follow_up_hours" name="follow_up_hours" value="{{ config.follow_up_hours if config else 24 }}" min="1" max="168">
+                        <div class="form-text">Quanto tempo esperar antes de enviar uma mensagem de acompanhamento para leads inativos.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notification_number" class="form-label">Número para Notificações</label>
+                        <input type="text" class="form-control" id="notification_number" name="notification_number" value="{{ config.notification_number if config else '61985870944' }}">
+                        <div class="form-text">Número de telefone para receber notificações (formato: 61985870944).</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i> Salvar Configurações
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Gerenciamento de Produtos -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i> Produtos</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h6>Adicionar Novo Produto</h6>
+                    <form action="{{ url_for('save_product') }}" method="post">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nome do Produto</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Preço (R$)</label>
+                            <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i> Adicionar Produto
+                        </button>
+                    </form>
+                </div>
+                
+                <hr>
+                
+                <div>
+                    <h6>Produtos Existentes</h6>
+                    {% if products %}
+                        {% for product in products %}
+                            <div class="product-item">
+                                <h6>{{ product.name }}</h6>
+                                <p class="text-muted small">{{ product.description }}</p>
+                                <p><strong>Preço:</strong> R$ {{ "%.2f"|format(product.price).replace('.', ',') }}</p>
+                                
+                                <form action="{{ url_for('save_product') }}" method="post" class="mt-2">
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <input type="hidden" name="name" value="{{ product.name }}">
+                                    <input type="hidden" name="description" value="{{ product.description }}">
+                                    <input type="hidden" name="price" value="{{ product.price }}">
+                                    
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProduct{{ product.id }}">
+                                            <i class="fas fa-edit me-1"></i> Editar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Modal de Edição -->
+                            <div class="modal fade" id="editProduct{{ product.id }}" tabindex="-1" aria-labelledby="editProductLabel{{ product.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editProductLabel{{ product.id }}">Editar Produto</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{ url_for('save_product') }}" method="post">
+                                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                                
+                                                <div class="mb-3">
+                                                    <label for="edit_name{{ product.id }}" class="form-label">Nome do Produto</label>
+                                                    <input type="text" class="form-control" id="edit_name{{ product.id }}" name="name" value="{{ product.name }}" required>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="edit_description{{ product.id }}" class="form-label">Descrição</label>
+                                                    <textarea class="form-control" id="edit_description{{ product.id }}" name="description" rows="2">{{ product.description }}</textarea>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="edit_price{{ product.id }}" class="form-label">Preço (R$)</label>
+                                                    <input type="number" class="form-control" id="edit_price{{ product.id }}" name="price" min="0" step="0.01" value="{{ product.price }}" required>
+                                                </div>
+                                                
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-save me-2"></i> Salvar Alterações
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-info">
+                            Nenhum produto cadastrado ainda. Adicione um produto acima.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
