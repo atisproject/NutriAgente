@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import app, db
 from models import User, Lead, Interacao, Formulario, ProdutoNutricao, BaseConhecimento, Configuracao
 from ai_agent import agente_boas_vindas, processar_mensagem, analisar_sentimento_cliente
-from notification import enviar_sms, notificar_administrador, notificar_novo_lead, notificar_potencial_conversao
+from notification import enviar_sms, enviar_whatsapp, notificar_administrador, notificar_novo_lead, notificar_potencial_conversao
 from scheduler import iniciar_scheduler
 
 # Iniciar o scheduler quando a aplicação iniciar somente em produção
@@ -104,8 +104,14 @@ def index():
         db.session.add(interacao)
         db.session.commit()
         
-        # Envia SMS para o cliente
-        enviar_sms(telefone, mensagem_boas_vindas)
+        # Define a fonte preferencial de contato do lead
+        fonte = request.form.get('fonte', 'site')
+        
+        # Envia a mensagem de boas-vindas pelo canal apropriado
+        if fonte == 'whatsapp':
+            enviar_whatsapp(telefone, mensagem_boas_vindas)
+        else:
+            enviar_sms(telefone, mensagem_boas_vindas)
         
         # Notifica o administrador
         notificar_novo_lead(nome, telefone)
@@ -246,6 +252,7 @@ def api_enviar_mensagem():
     
     telefone = data['telefone']
     mensagem = data['mensagem']
+    canal = data.get('canal', 'sms')  # Padrão é SMS se não especificado
     
     # Busca o lead pelo telefone
     lead = Lead.query.filter_by(telefone=telefone).first()
@@ -256,8 +263,11 @@ def api_enviar_mensagem():
     # Processa a mensagem e obtém resposta
     resposta = processar_mensagem(lead.id, mensagem)
     
-    # Envia a resposta por SMS
-    envio_sucesso = enviar_sms(telefone, resposta)
+    # Envia a resposta pelo canal especificado
+    if canal.lower() == 'whatsapp':
+        envio_sucesso = enviar_whatsapp(telefone, resposta)
+    else:
+        envio_sucesso = enviar_sms(telefone, resposta)
     
     # Analisa o sentimento da mensagem
     try:
@@ -266,13 +276,14 @@ def api_enviar_mensagem():
         # Se a probabilidade de conversão for alta, notifica o administrador
         if analise.get('prob_conversao', 0) > 0.8:
             notificar_potencial_conversao(lead.nome, lead.telefone, analise['prob_conversao'])
-    except:
-        pass
+    except Exception as e:
+        logger.error(f"Erro ao analisar sentimento: {str(e)}")
     
     return jsonify({
         'status': 'sucesso',
         'resposta': resposta,
-        'enviado': envio_sucesso
+        'enviado': envio_sucesso,
+        'canal': canal
     })
 
 @app.route('/api/atualizar_lead', methods=['POST'])
@@ -316,6 +327,7 @@ def api_enviar_formulario():
     
     lead_id = data['lead_id']
     tipo = data['tipo']
+    canal = data.get('canal', 'sms')  # Padrão é SMS se não especificado
     
     lead = Lead.query.get(lead_id)
     
@@ -338,7 +350,11 @@ def api_enviar_formulario():
         f"Acesse o link: https://nutriai.com.br/formulario/{formulario.id}"
     )
     
-    envio_sucesso = enviar_sms(lead.telefone, mensagem)
+    # Enviar pelo canal especificado
+    if canal.lower() == 'whatsapp':
+        envio_sucesso = enviar_whatsapp(lead.telefone, mensagem)
+    else:
+        envio_sucesso = enviar_sms(lead.telefone, mensagem)
     
     # Registra a interação
     interacao = Interacao(
@@ -353,7 +369,8 @@ def api_enviar_formulario():
         'status': 'sucesso',
         'formulario_id': formulario.id,
         'mensagem': 'Formulário enviado com sucesso',
-        'enviado': envio_sucesso
+        'enviado': envio_sucesso,
+        'canal': canal
     })
 
 @app.errorhandler(404)

@@ -1,15 +1,13 @@
-from flask import request, jsonify, flash, redirect, url_for
-from app import app, db
+from flask import request, jsonify, render_template
 from twilio.twiml.messaging_response import MessagingResponse
+from app import app, db
+from models import Lead, Interacao
 from whatsapp_integration import processar_mensagem_whatsapp, enviar_mensagem_whatsapp
-from models import Lead, Interacao, Formulario
 import logging
 
-# Configuração de logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-@app.route('/api/whatsapp/webhook', methods=['POST'])
+@app.route('/webhook/whatsapp', methods=['POST'])
 def whatsapp_webhook():
     """
     Webhook para receber mensagens do WhatsApp via Twilio
@@ -18,27 +16,27 @@ def whatsapp_webhook():
     para o número do WhatsApp. A mensagem é processada e uma resposta é enviada.
     """
     try:
-        # Obter os parâmetros do formulário
+        # Extrair informações da requisição
         mensagem_de = request.values.get('From', '')
         mensagem_texto = request.values.get('Body', '')
         
-        logger.info(f"Mensagem WhatsApp recebida de {mensagem_de}: {mensagem_texto}")
+        logger.info(f"Mensagem recebida via WhatsApp de {mensagem_de}: {mensagem_texto}")
         
-        # Processar a mensagem se não estiver vazia
-        if mensagem_texto.strip():
-            # Processar a mensagem e obter a resposta
-            resposta = processar_mensagem_whatsapp(mensagem_de, mensagem_texto)
-            
-            # Criar resposta TwiML
-            resp = MessagingResponse()
-            resp.message(resposta)
-            
-            return str(resp)
+        # Processar a mensagem e gerar resposta
+        resposta = processar_mensagem_whatsapp(mensagem_de, mensagem_texto)
         
-        return 'OK'
+        # Preparar resposta para o Twilio
+        resp = MessagingResponse()
+        resp.message(resposta)
+        
+        return str(resp)
+    
     except Exception as e:
         logger.error(f"Erro no webhook do WhatsApp: {str(e)}")
-        return 'Erro no processamento da mensagem', 500
+        # Mesmo em caso de erro, precisamos retornar uma resposta válida para o Twilio
+        resp = MessagingResponse()
+        resp.message("Estamos com problemas técnicos. Por favor, tente novamente mais tarde.")
+        return str(resp)
 
 @app.route('/api/whatsapp/enviar', methods=['POST'])
 def enviar_whatsapp():
@@ -48,55 +46,41 @@ def enviar_whatsapp():
     Esta rota permite que os administradores do sistema enviem mensagens
     para os clientes via WhatsApp a partir da interface web.
     """
-    try:
-        # Requisição deve ser JSON
-        dados = request.get_json()
-        
-        if not dados:
-            return jsonify({'status': 'erro', 'mensagem': 'Dados não fornecidos'}), 400
-        
-        lead_id = dados.get('lead_id')
-        mensagem = dados.get('mensagem')
-        
-        if not lead_id or not mensagem:
-            return jsonify({'status': 'erro', 'mensagem': 'ID do lead e mensagem são obrigatórios'}), 400
-        
-        # Buscar o lead
-        lead = Lead.query.get(lead_id)
-        if not lead:
-            return jsonify({'status': 'erro', 'mensagem': 'Lead não encontrado'}), 404
-        
-        # Enviar mensagem via WhatsApp
-        enviado = enviar_mensagem_whatsapp(lead.telefone, mensagem)
-        
-        if enviado:
-            # Registrar a interação
-            nova_interacao = Interacao(
+    # Verificar autenticação (isso será aprimorado com login_required depois)
+    # Esta API é apenas para ser usada pela interface de administração
+    
+    data = request.json
+    
+    if not data or 'numero' not in data or 'mensagem' not in data:
+        return jsonify({'status': 'erro', 'mensagem': 'Dados incompletos'}), 400
+    
+    numero = data['numero']
+    mensagem = data['mensagem']
+    lead_id = data.get('lead_id')
+    
+    # Enviar a mensagem
+    sucesso = enviar_mensagem_whatsapp(numero, mensagem)
+    
+    # Se temos o lead_id, registrar a interação
+    if lead_id and sucesso:
+        try:
+            lead_id = int(lead_id)
+            interacao = Interacao(
                 lead_id=lead_id,
                 mensagem=mensagem,
-                origem='sistema'  # Ou 'usuario' se preferir
+                origem="sistema"  # ou "usuario" dependendo do contexto
             )
-            db.session.add(nova_interacao)
+            db.session.add(interacao)
             db.session.commit()
-            
-            return jsonify({
-                'status': 'sucesso',
-                'mensagem': 'Mensagem enviada com sucesso'
-            })
-        else:
-            return jsonify({
-                'status': 'erro',
-                'mensagem': 'Falha ao enviar mensagem via WhatsApp'
-            }), 500
-            
-    except Exception as e:
-        logger.error(f"Erro ao enviar mensagem WhatsApp: {str(e)}")
-        return jsonify({
-            'status': 'erro',
-            'mensagem': f'Erro ao processar solicitação: {str(e)}'
-        }), 500
+        except Exception as e:
+            logger.error(f"Erro ao registrar interação: {str(e)}")
+    
+    if sucesso:
+        return jsonify({'status': 'sucesso', 'mensagem': 'Mensagem enviada com sucesso'})
+    else:
+        return jsonify({'status': 'erro', 'mensagem': 'Falha ao enviar mensagem'}), 500
 
-@app.route('/whatsapp/configuracao', methods=['GET', 'POST'])
+@app.route('/configuracao/whatsapp', methods=['GET', 'POST'])
 def whatsapp_configuracao():
     """
     Página para configuração do WhatsApp
@@ -105,10 +89,8 @@ def whatsapp_configuracao():
     configurações relacionadas ao WhatsApp.
     """
     if request.method == 'POST':
-        # Processar o formulário de configuração
-        # Aqui você pode salvar configurações específicas do WhatsApp
-        flash('Configurações do WhatsApp atualizadas com sucesso', 'success')
-        return redirect(url_for('configuracoes'))
+        # Implementar salvamento das configurações
+        pass
     
-    # Esta rota seria acessível a partir da página de configurações
-    return redirect(url_for('configuracoes'))
+    # Por enquanto, apenas redireciona para a página principal de configurações
+    return render_template('configuracoes.html')

@@ -6,7 +6,8 @@ from apscheduler.executors.pool import ThreadPoolExecutor
 from app import app, db
 from models import Formulario, Lead, Interacao
 from ai_agent import gerar_lembrete_formulario
-from notification import enviar_sms, notificar_administrador, notificar_formulario_pendente
+from notification import enviar_sms, enviar_whatsapp, notificar_administrador, notificar_formulario_pendente
+from models import Configuracao
 
 logger = logging.getLogger(__name__)
 
