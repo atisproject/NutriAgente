@@ -1,0 +1,402 @@
+2025-03-27 00:14:45.688Z: Host information
+2025-03-27 00:14:45.688Z: ----------------
+2025-03-27 00:14:45.688Z: OS: Ubuntu 22.04.5 LTS (stable release)
+2025-03-27 00:14:45.688Z: Image details: https://github.com/github/codespaces-host-images/blob/main/README.md
+2025-03-27 00:14:45.688Z: ----------------
+
+=================================================================================
+2025-03-27 00:14:45.691Z: Configuration starting...
+2025-03-27 00:14:45.699Z: Cloning...
+
+=================================================================================
+2025-03-27 00:14:45.726Z: Creating container...
+2025-03-27 00:14:45.726Z: Cleaning up docker images...
+2025-03-27 00:14:47.064Z: $ devcontainer up --id-label Type=codespaces --workspace-folder /var/lib/docker/codespacemount/workspace/NutriAgente --mount type=bind,source=/.codespaces/agent/mount/cache,target=/vscode --user-data-folder /var/lib/docker/codespacemount/.persistedshare --container-data-folder .vscode-remote/data/Machine --container-system-data-folder /var/vscode-remote --log-level trace --log-format json --update-remote-user-uid-default never --mount-workspace-git-root false --omit-config-remote-env-from-metadata --skip-non-blocking-commands --skip-post-create --remove-existing-container --config "/var/lib/docker/codespacemount/workspace/NutriAgente/.devcontainer/devcontainer.json" --override-config /root/.codespaces/shared/merged_devcontainer.json --default-user-env-probe loginInteractiveShell --container-session-data-folder /workspaces/.codespaces/.persistedshare/devcontainers-cli/cache --secrets-file /root/.codespaces/shared/user-secrets-envs.json
+2025-03-27 00:14:47.244Z: @devcontainers/cli 0.68.0. Node.js v18.20.6. linux 6.8.0-1021-azure x64.
+2025-03-27 00:14:47.820Z: $ docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 -f /tmp/devcontainercli-root/container-features/0.68.0-1743034487816/Dockerfile-with-features -t vsc-nutriagente-ea38788d035853636c5fcce8426f30dda7fbdc34ddfc0fb3a9b7bf753a0dec0d --target dev_containers_target_stage --build-arg _DEV_CONTAINERS_BASE_IMAGE=dev_container_auto_added_stage_label /var/lib/docker/codespacemount/workspace/NutriAgente/.devcontainer
+2025-03-27 00:14:48.322Z: #0 building with "default" instance using docker driver
+
+#1 [internal] load .dockerignore
+#1 transferring context: 2B done
+#1 DONE 0.1s
+
+#2 [internal] load build definition from Dockerfile-with-features
+#2 transferring dockerfile: 1.95kB done
+#2 DONE 0.1s
+2025-03-27 00:14:48.559Z: 
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+2025-03-27 00:14:48.560Z: 
+#4 [internal] load metadata for docker.io/library/python:3.11-slim
+2025-03-27 00:14:48.779Z: #4 DONE 0.4s
+2025-03-27 00:14:48.882Z: 
+2025-03-27 00:14:48.882Z: #5 [internal] load build context
+#5 transferring context: 2B done
+#5 DONE 0.0s
+
+#6 [dev_container_auto_added_stage_label 2/6] WORKDIR /workspace
+#6 CACHED
+2025-03-27 00:14:48.882Z: 
+#7 [dev_container_auto_added_stage_label 3/6] RUN apt-get update     && apt-get install -y --no-install-recommends     build-essential     curl     git     && apt-get clean     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [dev_container_auto_added_stage_label 4/6] RUN pip install --upgrade pip     && pip install black flake8 pytest
+#8 CACHED
+
+#9 [dev_container_auto_added_stage_label 5/6] COPY dependencias.txt .
+#9 ERROR: failed to calculate checksum of ref 9fbe0a35-7d22-4f0d-9606-37e27094cac3::niz0gw6zhwgsrhx5xzuyd1ho5: "/dependencias.txt": not found
+
+#10 [dev_container_auto_added_stage_label 1/6] FROM docker.io/library/python:3.11-slim@sha256:7029b00486ac40bed03e36775b864d3f3d39dcbdf19cd45e6a52d541e6c178f0
+#10 resolve docker.io/library/python:3.11-slim@sha256:7029b00486ac40bed03e36775b864d3f3d39dcbdf19cd45e6a52d541e6c178f0 0.0s done
+#10 sha256:7029b00486ac40bed03e36775b864d3f3d39dcbdf19cd45e6a52d541e6c178f0 9.13kB / 9.13kB done
+#10 sha256:9a0a27e638a9b2da7384fc08fb72abab453ddadd2fe92aab6ed4a1ab67455e5f 1.75kB / 1.75kB done
+2025-03-27 00:14:48.882Z: #10 sha256:de3a6c124050bb59b294dd2c95caf61f7da984337aafad3c0a9a06854fa86880 5.29kB / 5.29kB done
+#10 CANCELED
+------
+ > [dev_container_auto_added_stage_label 5/6] COPY dependencias.txt .:
+------
+2025-03-27 00:14:48.887Z: Dockerfile-with-features:26
+--------------------
+  24 |     
+  25 |     # Copia arquivos de requisitos
+  26 | >>> COPY dependencias.txt .
+  27 |     
+  28 |     # Instala dependências do projeto
+--------------------
+ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref 9fbe0a35-7d22-4f0d-9606-37e27094cac3::niz0gw6zhwgsrhx5xzuyd1ho5: "/dependencias.txt": not found
+2025-03-27 00:14:48.892Z: Stop: Run: docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 -f /tmp/devcontainercli-root/container-features/0.68.0-1743034487816/Dockerfile-with-features -t vsc-nutriagente-ea38788d035853636c5fcce8426f30dda7fbdc34ddfc0fb3a9b7bf753a0dec0d --target dev_containers_target_stage --build-arg _DEV_CONTAINERS_BASE_IMAGE=dev_container_auto_added_stage_label /var/lib/docker/codespacemount/workspace/NutriAgente/.devcontainer
+2025-03-27 00:14:48.892Z: Error: Command failed: docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 -f /tmp/devcontainercli-root/container-features/0.68.0-1743034487816/Dockerfile-with-features -t vsc-nutriagente-ea38788d035853636c5fcce8426f30dda7fbdc34ddfc0fb3a9b7bf753a0dec0d --target dev_containers_target_stage --build-arg _DEV_CONTAINERS_BASE_IMAGE=dev_container_auto_added_stage_label /var/lib/docker/codespacemount/workspace/NutriAgente/.devcontainer
+2025-03-27 00:14:48.893Z:     at FtA (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:466:1933)
+2025-03-27 00:14:48.893Z: {"outcome":"error","message":"Command failed: docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 -f /tmp/devcontainercli-root/container-features/0.68.0-1743034487816/Dockerfile-with-features -t vsc-nutriagente-ea38788d035853636c5fcce8426f30dda7fbdc34ddfc0fb3a9b7bf753a0dec0d --target dev_containers_target_stage --build-arg _DEV_CONTAINERS_BASE_IMAGE=dev_container_auto_added_stage_label /var/lib/docker/codespacemount/workspace/NutriAgente/.devcontainer","description":"An error occurred building the image."}
+2025-03-27 00:14:48.894Z:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-03-27 00:14:48.894Z:     at async Pm (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:465:1896)
+2025-03-27 00:14:48.894Z:     at async NH (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:465:610)
+2025-03-27 00:14:48.895Z:     at async YtA (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:482:3771)
+2025-03-27 00:14:48.897Z:     at async eB (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:482:4886)
+2025-03-27 00:14:48.897Z:     at async prA (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:663:200)
+2025-03-27 00:14:48.897Z:     at async drA (/.codespaces/agent/bin/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:662:14706)
+2025-03-27 00:14:48.902Z: devcontainer process exited with exit code 1
+
+====================================== ERROR ====================================
+2025-03-27 00:14:48.906Z: Failed to create container.
+=================================================================================
+2025-03-27 00:14:48.906Z: Error: Command failed: docker buildx build --load --build-arg BUILDKIT_INLINE_CACHE=1 -f /tmp/devcontainercli-root/container-features/0.68.0-1743034487816/Dockerfile-with-features -t vsc-nutriagente-ea38788d035853636c5fcce8426f30dda7fbdc34ddfc0fb3a9b7bf753a0dec0d --target dev_containers_target_stage --build-arg _DEV_CONTAINERS_BASE_IMAGE=dev_container_auto_added_stage_label /var/lib/docker/codespacemount/workspace/NutriAgente/.devcontainer
+2025-03-27 00:14:48.909Z: Error code: 1302 (UnifiedContainersErrorFatalCreatingContainer)
+
+====================================== ERROR ====================================
+2025-03-27 00:14:48.917Z: Container creation failed.
+=================================================================================
+2025-03-27 00:14:48.927Z: 
+
+===================================== WARNING ===================================
+2025-03-27 00:14:48.928Z: Creating recovery container.
+=================================================================================
+
+=================================================================================
+2025-03-27 00:14:49.069Z: Creating container...
+2025-03-27 00:14:49.114Z: $ devcontainer up --id-label Type=codespaces --workspace-folder /var/lib/docker/codespacemount/workspace/NutriAgente --mount type=bind,source=/.codespaces/agent/mount/cache,target=/vscode --user-data-folder /var/lib/docker/codespacemount/.persistedshare --container-data-folder .vscode-remote/data/Machine --container-system-data-folder /var/vscode-remote --log-level trace --log-format json --update-remote-user-uid-default never --mount-workspace-git-root false --omit-config-remote-env-from-metadata --skip-non-blocking-commands --skip-post-create --config "/var/lib/docker/codespacemount/workspace/NutriAgente/.devcontainer/devcontainer.json" --override-config /root/.codespaces/shared/merged_devcontainer.json --default-user-env-probe loginInteractiveShell --container-session-data-folder /workspaces/.codespaces/.persistedshare/devcontainers-cli/cache --secrets-file /root/.codespaces/shared/user-secrets-envs.json
+2025-03-27 00:14:49.306Z: @devcontainers/cli 0.68.0. Node.js v18.20.6. linux 6.8.0-1021-azure x64.
+2025-03-27 00:14:49.690Z: $alpine -c echo Container started
+2025-03-27 00:14:49.718Z: Unable to find image 'mcr.microsoft.com/devcontainers/base:alpine' locally
+2025-03-27 00:14:49.861Z: alpine: Pulling from devcontainers/base
+2025-03-27 00:14:49.911Z: 
+[1A[2K
+f18232174bc9: Pulling fs layer 
+[1B
+[1A[2K
+9dc0411b9b6f: Pulling fs layer 
+[1B
+[1A[2K
+d3ccccef897d: Pulling fs layer 
+[1B
+[1A[2K
+36af4db446ce: Pulling fs layer 
+[1B
+[1A[2K
+0c4110304071: Pulling fs layer 
+[1B
+[1A[2K
+38aa85c97673: Pulling fs layer 
+[1B
+[1A[2K
+caa42fe1b93e: Pulling fs layer 
+[1B[3A[2K
+0c4110304071: Waiting 
+[3B[4A[2K
+36af4db446ce: Waiting 
+2025-03-27 00:14:49.913Z: [4B[2A[2K
+38aa85c97673: Waiting 
+[2B[1A[2K
+caa42fe1b93e: Waiting 
+[1B2025-03-27 00:14:49.964Z: [6A[2K
+9dc0411b9b6f: Downloading     409B/409B
+[6B[6A[2K
+9dc0411b9b6f: Verifying Checksum 
+[6B[6A[2K
+9dc0411b9b6f: Download complete 
+[6B2025-03-27 00:14:49.975Z: [5A[2K
+d3ccccef897d: Downloading     134B/134B
+2025-03-27 00:14:49.975Z: [5B[5A2025-03-27 00:14:49.975Z: [2K
+d3ccccef897d: Verifying Checksum 
+[5B[5A[2K
+d3ccccef897d: Download complete 
+[5B2025-03-27 00:14:49.981Z: [7A[2K
+2025-03-27 00:14:49.981Z: f18232174bc9: Downloading  48.34kB/3.642MB
+[7B2025-03-27 00:14:50.005Z: [7A[2K
+f18232174bc9: Verifying Checksum 
+[7B2025-03-27 00:14:50.005Z: [7A[2K
+f18232174bc9: Download complete 
+[7B2025-03-27 00:14:50.021Z: [4A[2K
+36af4db446ce: Downloading     224B/224B
+[4B[4A2025-03-27 00:14:50.022Z: [2K
+36af4db446ce: Verifying Checksum 
+[4B[4A[2K
+36af4db446ce: Download complete 
+[4B2025-03-27 00:14:50.038Z: [7A2025-03-27 00:14:50.038Z: [2K
+f18232174bc9: Extracting  65.54kB/3.642MB
+[7B2025-03-27 00:14:50.042Z: [3A[2K
+0c4110304071: Downloading     234B/234B
+[3B2025-03-27 00:14:50.043Z: [3A[2K
+0c4110304071: Verifying Checksum 
+[3B[3A[2K
+0c4110304071: Download complete 
+[3B2025-03-27 00:14:50.069Z: [2A[2K
+38aa85c97673: 2025-03-27 00:14:50.071Z: Downloading  538.9kB/241MB
+[2B2025-03-27 00:14:50.090Z: [1A[2K
+caa42fe1b93e: Downloading    457kB/44.3MB
+[1B2025-03-27 00:14:50.151Z: [7A[2K
+f18232174bc9: Extracting  1.311MB/3.642MB
+[7B2025-03-27 00:14:50.171Z: [2A[2K
+38aa85c97673: Downloading  21.07MB/241MB
+[2B2025-03-27 00:14:50.202Z: [1A[2K
+caa42fe1b93e: Downloading  19.25MB/44.3MB
+2025-03-27 00:14:50.203Z: [1B2025-03-27 00:14:50.256Z: [7A[2K
+f18232174bc9: Extracting  2.359MB/3.642MB
+[7B2025-03-27 00:14:50.272Z: [2A[2K
+2025-03-27 00:14:50.275Z: 38aa85c97673: Downloading  39.45MB/241MB
+2025-03-27 00:14:50.276Z: [2B2025-03-27 00:14:50.284Z: [1A[2K
+caa42fe1b93e: Verifying Checksum 
+[1B[1A[2K
+caa42fe1b93e: Download complete 
+[1B2025-03-27 00:14:50.320Z: [7A[2K
+f18232174bc9: Extracting  3.642MB/3.642MB
+[7B2025-03-27 00:14:50.366Z: [7A[2K
+f18232174bc9: 2025-03-27 00:14:50.367Z: Pull complete 
+[7B2025-03-27 00:14:50.384Z: [6A[2K
+9dc0411b9b6f: Extracting     409B/409B
+[6B[2A[2K
+38aa85c97673: Downloading   62.7MB/241MB
+[2B[6A[2K
+9dc0411b9b6f: Extracting     409B/409B
+[6B2025-03-27 00:14:50.481Z: [2A[2K
+38aa85c97673: Downloading  82.71MB/241MB
+[2B2025-03-27 00:14:50.588Z: [2A[2K
+38aa85c97673: Downloading  96.22MB/241MB
+[2B2025-03-27 00:14:50.681Z: [2A[2K
+38aa85c97673: 2025-03-27 00:14:50.681Z: Downloading  121.1MB/241MB
+[2B2025-03-27 00:14:50.815Z: [2A[2K2025-03-27 00:14:50.816Z: 
+38aa85c97673: Downloading  131.9MB/241MB
+[2B2025-03-27 00:14:50.916Z: [2A[2K
+38aa85c97673: Downloading  155.2MB/241MB
+[2B2025-03-27 00:14:51.018Z: [2A2025-03-27 00:14:51.020Z: [2K
+38aa85c97673: Downloading  175.7MB/241MB
+[2B2025-03-27 00:14:51.120Z: [2A[2K
+38aa85c97673: Downloading    199MB/241MB
+[2B2025-03-27 00:14:51.221Z: [2A[2K
+38aa85c97673: Downloading  221.1MB/241MB
+[2B2025-03-27 00:14:51.308Z: [2A[2K
+38aa85c97673: Verifying Checksum 
+[2B[2A[2K
+38aa85c97673: Download complete 
+[2B2025-03-27 00:14:52.506Z: [6A[2K
+9dc0411b9b6f: Pull complete 
+[6B2025-03-27 00:14:52.511Z: [5A[2K
+2025-03-27 00:14:52.511Z: d3ccccef897d: Extracting     134B/134B
+[5B2025-03-27 00:14:52.512Z: [5A[2K
+d3ccccef897d: Extracting     134B/134B
+[5B2025-03-27 00:14:54.259Z: [5A[2K
+d3ccccef897d: Pull complete 
+[5B2025-03-27 00:14:54.262Z: [4A[2K
+36af4db446ce: Extracting     224B/224B
+[4B2025-03-27 00:14:54.265Z: [4A[2K2025-03-27 00:14:54.265Z: 
+36af4db446ce: Extracting     224B/224B
+[4B2025-03-27 00:14:54.287Z: [4A[2K
+2025-03-27 00:14:54.287Z: 36af4db446ce: Pull complete 
+[4B2025-03-27 00:14:54.292Z: [3A[2K
+2025-03-27 00:14:54.293Z: 0c4110304071: Extracting     234B/234B
+[3B2025-03-27 00:14:54.294Z: [3A[2K
+0c4110304071: Extracting     234B/234B
+[3B2025-03-27 00:14:54.314Z: [3A[2K
+0c4110304071: 2025-03-27 00:14:54.316Z: Pull complete 
+[3B2025-03-27 00:14:54.333Z: [2A[2K2025-03-27 00:14:54.334Z: 
+38aa85c97673: Extracting  557.1kB/241MB
+[2B2025-03-27 00:14:54.435Z: [2A[2K
+38aa85c97673: Extracting  5.571MB/241MB
+2025-03-27 00:14:54.435Z: [2B2025-03-27 00:14:54.542Z: [2A[2K
+2025-03-27 00:14:54.542Z: 38aa85c97673: Extracting  13.37MB/241MB
+[2B2025-03-27 00:14:54.645Z: [2A[2K
+38aa85c97673: 2025-03-27 00:14:54.646Z: Extracting  20.05MB/241MB
+[2B2025-03-27 00:14:54.785Z: [2A[2K
+38aa85c97673: Extracting  23.95MB/241MB
+[2B2025-03-27 00:14:54.956Z: [2A[2K
+38aa85c97673: Extracting  25.07MB/241MB
+[2B2025-03-27 00:14:55.126Z: [2A[2K
+38aa85c97673: Extracting  26.18MB/241MB
+[2B2025-03-27 00:14:55.225Z: [2A2025-03-27 00:14:55.226Z: [2K
+38aa85c97673: Extracting   27.3MB/241MB
+[2B2025-03-27 00:14:55.345Z: [2A[2K
+38aa85c97673: Extracting  30.08MB/241MB
+[2B2025-03-27 00:14:55.462Z: [2A[2K
+38aa85c97673: Extracting  31.75MB/241MB
+[2B2025-03-27 00:14:55.561Z: [2A[2K
+38aa85c97673: Extracting  38.44MB/241MB
+[2B2025-03-27 00:14:55.664Z: [2A[2K2025-03-27 00:14:55.664Z: 
+38aa85c97673: Extracting  44.56MB/241MB
+2025-03-27 00:14:55.665Z: [2B2025-03-27 00:14:55.767Z: [2A2025-03-27 00:14:55.768Z: [2K
+38aa85c97673: Extracting  50.14MB/241MB
+[2B2025-03-27 00:14:55.869Z: [2A[2K
+38aa85c97673: Extracting  54.59MB/241MB
+[2B2025-03-27 00:14:55.975Z: [2A[2K
+38aa85c97673: Extracting  57.38MB/241MB
+2025-03-27 00:14:55.976Z: [2B2025-03-27 00:14:56.078Z: [2A[2K
+2025-03-27 00:14:56.078Z: 38aa85c97673: Extracting  60.72MB/241MB
+[2B2025-03-27 00:14:56.198Z: [2A[2K
+38aa85c97673: 2025-03-27 00:14:56.199Z: Extracting  62.95MB/241MB
+[2B2025-03-27 00:14:56.300Z: [2A[2K
+38aa85c97673: Extracting   71.3MB/241MB
+[2B2025-03-27 00:14:56.401Z: [2A[2K
+38aa85c97673: 2025-03-27 00:14:56.401Z: Extracting  83.56MB/241MB
+[2B2025-03-27 00:14:56.504Z: [2A[2K
+38aa85c97673: Extracting  91.91MB/241MB
+[2B2025-03-27 00:14:56.607Z: [2A[2K
+2025-03-27 00:14:56.608Z: 38aa85c97673: Extracting  103.1MB/241MB
+[2B2025-03-27 00:14:56.714Z: [2A[2K2025-03-27 00:14:56.715Z: 
+38aa85c97673: Extracting  114.2MB/241MB
+[2B2025-03-27 00:14:56.824Z: [2A[2K
+2025-03-27 00:14:56.825Z: 38aa85c97673: Extracting  115.9MB/241MB
+[2B2025-03-27 00:14:56.963Z: [2A2025-03-27 00:14:56.963Z: [2K
+38aa85c97673: Extracting  120.3MB/241MB
+[2B2025-03-27 00:14:57.074Z: [2A2025-03-27 00:14:57.074Z: [2K
+38aa85c97673: Extracting    122MB/241MB
+[2B2025-03-27 00:14:57.211Z: [2A[2K
+38aa85c97673: Extracting  123.7MB/241MB
+[2B2025-03-27 00:14:57.312Z: [2A[2K
+38aa85c97673: Extracting  129.8MB/241MB
+[2B2025-03-27 00:14:57.421Z: [2A[2K
+38aa85c97673: 2025-03-27 00:14:57.421Z: Extracting  136.5MB/241MB
+[2B2025-03-27 00:14:57.525Z: [2A[2K2025-03-27 00:14:57.527Z: 
+38aa85c97673: Extracting  142.6MB/241MB
+[2B2025-03-27 00:14:57.624Z: [2A2025-03-27 00:14:57.625Z: [2K
+38aa85c97673: Extracting  149.8MB/241MB
+[2B2025-03-27 00:14:57.729Z: [2A[2K2025-03-27 00:14:57.730Z: 
+2025-03-27 00:14:57.730Z: 38aa85c97673: Extracting    156MB/241MB
+[2B2025-03-27 00:14:57.838Z: [2A[2K
+38aa85c97673: Extracting  162.1MB/241MB
+[2B2025-03-27 00:14:57.942Z: [2A[2K
+2025-03-27 00:14:57.942Z: 38aa85c97673: Extracting  169.3MB/241MB
+[2B2025-03-27 00:14:58.045Z: [2A[2K2025-03-27 00:14:58.046Z: 
+38aa85c97673: Extracting  174.9MB/241MB
+[2B2025-03-27 00:14:58.146Z: [2A2025-03-27 00:14:58.146Z: [2K
+38aa85c97673: Extracting  183.3MB/241MB
+[2B2025-03-27 00:14:58.259Z: [2A[2K
+38aa85c97673: 2025-03-27 00:14:58.259Z: Extracting  191.6MB/241MB
+[2B2025-03-27 00:14:58.364Z: [2A[2K
+38aa85c97673: Extracting    200MB/241MB
+[2B2025-03-27 00:14:58.474Z: [2A[2K2025-03-27 00:14:58.476Z: 
+38aa85c97673: Extracting  207.2MB/241MB
+[2B2025-03-27 00:14:58.580Z: [2A[2K
+38aa85c97673: Extracting  211.7MB/241MB
+[2B2025-03-27 00:14:58.685Z: [2A[2K2025-03-27 00:14:58.686Z: 
+38aa85c97673: Extracting  219.5MB/241MB
+[2B2025-03-27 00:14:58.787Z: [2A2025-03-27 00:14:58.787Z: [2K
+38aa85c97673: Extracting  226.2MB/241MB
+[2B2025-03-27 00:14:58.902Z: [2A[2K2025-03-27 00:14:58.903Z: 
+38aa85c97673: Extracting  230.1MB/241MB
+[2B2025-03-27 00:14:59.026Z: [2A[2K2025-03-27 00:14:59.027Z: 
+38aa85c97673: Extracting  231.2MB/241MB
+[2B2025-03-27 00:14:59.177Z: [2A[2K
+38aa85c97673: 2025-03-27 00:14:59.178Z: Extracting  232.8MB/241MB
+2025-03-27 00:14:59.178Z: [2B2025-03-27 00:14:59.419Z: [2A2025-03-27 00:14:59.419Z: [2K
+38aa85c97673: Extracting  234.5MB/241MB
+[2B2025-03-27 00:14:59.524Z: [2A2025-03-27 00:14:59.525Z: [2K
+38aa85c97673: Extracting  235.6MB/241MB
+2025-03-27 00:14:59.525Z: [2B2025-03-27 00:14:59.688Z: [2A[2K
+38aa85c97673: Extracting  236.2MB/241MB
+[2B2025-03-27 00:14:59.898Z: [2A[2K
+38aa85c97673: Extracting  236.7MB/241MB
+[2B2025-03-27 00:15:00.072Z: [2A2025-03-27 00:15:00.073Z: [2K
+38aa85c97673: Extracting  237.9MB/241MB
+[2B2025-03-27 00:15:00.302Z: [2A[2K
+38aa85c97673: 2025-03-27 00:15:00.302Z: Extracting  238.4MB/241MB
+[2B2025-03-27 00:15:00.478Z: [2A[2K2025-03-27 00:15:00.478Z: 
+38aa85c97673: Extracting    239MB/241MB
+[2B2025-03-27 00:15:00.488Z: [2A2025-03-27 00:15:00.488Z: [2K
+38aa85c97673: Extracting    241MB/241MB
+[2B2025-03-27 00:15:07.858Z: [2A[2K
+38aa85c97673: Pull complete 
+[2B2025-03-27 00:15:07.884Z: [1A[2K
+caa42fe1b93e: Extracting  458.8kB/44.3MB
+[1B2025-03-27 00:15:08.003Z: [1A2025-03-27 00:15:08.003Z: [2K
+caa42fe1b93e: Extracting  4.588MB/44.3MB
+[1B2025-03-27 00:15:08.120Z: [1A2025-03-27 00:15:08.121Z: [2K
+caa42fe1b93e: Extracting  5.046MB/44.3MB
+[1B2025-03-27 00:15:08.248Z: [1A[2K
+caa42fe1b93e: 2025-03-27 00:15:08.249Z: Extracting  5.505MB/44.3MB
+[1B2025-03-27 00:15:08.348Z: [1A[2K
+caa42fe1b93e: 2025-03-27 00:15:08.348Z: Extracting  8.716MB/44.3MB
+[1B2025-03-27 00:15:08.516Z: [1A[2K
+2025-03-27 00:15:08.517Z: caa42fe1b93e: Extracting  12.39MB/44.3MB
+[1B2025-03-27 00:15:08.637Z: [1A[2K
+caa42fe1b93e: Extracting  12.85MB/44.3MB
+[1B2025-03-27 00:15:08.739Z: [1A2025-03-27 00:15:08.740Z: [2K
+caa42fe1b93e: Extracting   15.6MB/44.3MB
+[1B2025-03-27 00:15:08.847Z: [1A[2K
+caa42fe1b93e: Extracting  21.56MB/44.3MB
+[1B2025-03-27 00:15:08.952Z: [1A[2K
+caa42fe1b93e: Extracting  27.07MB/44.3MB
+[1B2025-03-27 00:15:09.167Z: [1A[2K
+2025-03-27 00:15:09.167Z: caa42fe1b93e: Extracting  29.82MB/44.3MB
+[1B2025-03-27 00:15:09.309Z: [1A[2K
+caa42fe1b93e: Extracting  30.74MB/44.3MB
+[1B2025-03-27 00:15:09.410Z: [1A2025-03-27 00:15:09.411Z: [2K
+caa42fe1b93e: Extracting   31.2MB/44.3MB
+[1B2025-03-27 00:15:09.532Z: [1A[2K
+caa42fe1b93e: Extracting  31.65MB/44.3MB
+[1B2025-03-27 00:15:09.638Z: [1A2025-03-27 00:15:09.638Z: [2K
+caa42fe1b93e: Extracting  32.11MB/44.3MB
+[1B2025-03-27 00:15:09.755Z: [1A2025-03-27 00:15:09.755Z: [2K
+caa42fe1b93e: Extracting  33.03MB/44.3MB
+[1B2025-03-27 00:15:09.858Z: [1A[2K2025-03-27 00:15:09.859Z: 
+caa42fe1b93e: Extracting  34.41MB/44.3MB
+[1B2025-03-27 00:15:10.027Z: [1A2025-03-27 00:15:10.028Z: [2K
+caa42fe1b93e: Extracting   36.7MB/44.3MB
+[1B2025-03-27 00:15:10.146Z: [1A[2K
+caa42fe1b93e: 2025-03-27 00:15:10.146Z: Extracting  39.45MB/44.3MB
+[1B2025-03-27 00:15:10.267Z: [1A[2K
+caa42fe1b93e: Extracting  40.37MB/44.3MB
+[1B2025-03-27 00:15:10.406Z: [1A[2K
+caa42fe1b93e: Extracting  41.29MB/44.3MB
+[1B2025-03-27 00:15:10.577Z: [1A[2K
+caa42fe1b93e: Extracting  42.21MB/44.3MB
+[1B2025-03-27 00:15:10.591Z: [1A[2K
+caa42fe1b93e: Extracting   44.3MB/44.3MB
+[1B2025-03-27 00:15:12.216Z: [1A[2K
+2025-03-27 00:15:12.216Z: caa42fe1b93e: Pull complete 
+[1B2025-03-27 00:15:12.240Z: Digest: sha256:2c059b53955a42ceccedfb551618b1a7782579e3868f952d35f43a7bf4f64ee6
+2025-03-27 00:15:12.245Z: Status: Downloaded newer image for mcr.microsoft.com/devcontainers/base:alpine
+2025-03-27 00:15:12.408Z: Container started
+2025-03-27 00:15:12.600Z: Outcome: success User: vscode WorkspaceFolder: /workspaces/NutriAgente
+2025-03-27 00:15:12.606Z: devcontainer process exited with exit code 0
+
+=================================================================================
+2025-03-27 00:15:12.991Z: Running blocking commands...
+2025-03-27 00:15:13.033Z: $ devcontainer up --id-label Type=codespaces --workspace-folder /var/lib/docker/codespacemount/workspace/NutriAgente --mount type=bind,source=/.codespaces/agent/mount/cache,target=/vscode --user-data-folder /var/lib/docker/codespacemount/.persistedshare --container-data-folder .vscode-remote/data/Machine --container-system-data-folder /var/vscode-remote --log-level trace --log-format json --update-remote-user-uid-default never --mount-workspace-git-root false --omit-config-remote-env-from-metadata --skip-non-blocking-commands --expect-existing-container --config "/var/lib/docker/codespacemount/workspace/NutriAgente/.devcontainer/devcontainer.json" --override-config /root/.codespaces/shared/merged_devcontainer.json --default-user-env-probe loginInteractiveShell --container-session-data-folder /workspaces/.codespaces/.persistedshare/devcontainers-cli/cache --secrets-file /root/.codespaces/shared/user-secrets-envs.json
+2025-03-27 00:15:13.341Z: @devcontainers/cli 0.68.0. Node.js v18.20.6. linux 6.8.0-1021-azure x64.
+2025-03-27 00:15:13.719Z: Outcome: success User: vscode WorkspaceFolder: /workspaces/NutriAgente
+2025-03-27 00:15:13.744Z: devcontainer process exited with exit code 0
+
+=================================================================================
+2025-03-27 00:15:13.812Z: Configuring codespace...
+
+=================================================================================
+2025-03-27 00:15:13.812Z: Finished configuring codespace.
