@@ -1,0 +1,80 @@
+[6979 ms] O Subsistema do Windows para Linux n�o est� instalado. Voc� pode instalar executando 'wsl.exe --install'.
+Para obter mais informa��es, visite https://aka.ms/wslinstall
+
+[6983 ms] Exit code 50
+[6983 ms] WSL feature installed: false (wsl --status failed)
+[8903 ms] Windows build number: 26100
+[8904 ms] Start: Run: wsl --status
+[8971 ms] O Subsistema do Windows para Linux n�o est� instalado. Voc� pode instalar executando 'wsl.exe --install'.
+Para obter mais informa��es, visite https://aka.ms/wslinstall
+
+[8978 ms] Exit code 50
+[8978 ms] WSL feature installed: false (wsl --status failed)
+[8991 ms] Start: Run: powershell.exe Start-Process -FilePath 'C:\Users\ander\AppData\Local\Temp\wsl-install-a209879b-5105-4af4-b589-3823dc0a71bb.bat' -Verb RunAs -WindowStyle Hidden -Wait
+Baixando: Subsistema do Windows para Linux 2.4.13
+Instalando: Subsistema do Windows para Linux 2.4.13
+Subsistema do Windows para Linux 2.4.13 foi instalado.
+Instalando o componente opcional do Windows: VirtualMachinePlatform
+
+Ferramenta de Gerenciamento e Manutenção de Imagens de Implantação
+Versão: 10.0.26100.1150
+
+Versão da Imagem: 10.0.26100.3476
+
+Habilitando recurso(s)
+[==========================100.0%==========================]
+A operação foi concluída com êxito.
+Êxito na operação requisitada. As alterações só terão efeito depois que o sistem
+a for reiniciado.
+Êxito na operação requisitada. As alterações só terão efeito depois que o sistem
+a for reiniciado.
+[126605 ms] Start: Run: wsl --status
+[127096 ms] Vers�o Padr�o: 2
+WSL1 n�o � compat�vel com a configura��o atual da m�quina. 
+ Habilite o componente opcional "Windows Subsystem for Linux" para usar WSL1.
+
+N�o h� suporte para WSL2 com a configura��o atual do computador.
+Habilite o componente opcional "Plataforma da M�quina Virtual" e verifique se a virtualiza��o est� habilitada no BIOS.
+Habilite a "Plataforma da M�quina Virtual" executando: wsl.exe --install --no-distribution
+Para obter informa��es, visite https://aka.ms/enablevirtualization
+
+[127106 ms] Start: Run: wsl --version
+[127182 ms] Vers�o do WSL: 2.4.13.0
+Vers�o do kernel: 5.15.167.4-1
+Vers�o do WSLg: 1.0.65
+Vers�o do MSRDC: 1.2.5716
+Vers�o do Direct3D: 1.611.1-81528511
+Vers�o do DXCore: 10.0.26100.1-240331-1435.ge-release
+Vers�o do Windows: 10.0.26100.3476
+
+[127191 ms] Start: Run: wsl -l -v
+[127292 ms] Subsistema do Windows para Linux n�o tem distribui��es instaladas.
+Voc� pode resolve isso instalando uma distribui��o com as instru��es abaixo:
+
+Use 'wsl.exe --list --online' para listar distribui��es dispon�veis
+e 'wsl.exe --install <Distro>' para instalar.
+
+[127302 ms] Exit code 4294967295
+[127302 ms] Start: Run: wsl --set-default-version 2
+[127387 ms] Para informa��es sobre as principais diferen�as com o WSL 2, visite https://aka.ms/wsl2
+
+A opera��o foi conclu�da com �xito. 
+
+[127396 ms] Start: Run: wsl --install -d Ubuntu
+Êxito na operação requisitada. As alterações só terão efeito depois que o sistema for reiniciado.
+[127684 ms] Start: Run: wsl -l -v
+[127796 ms] Subsistema do Windows para Linux n�o tem distribui��es instaladas.
+Voc� pode resolve isso instalando uma distribui��o com as instru��es abaixo:
+
+Use 'wsl.exe --list --online' para listar distribui��es dispon�veis
+e 'wsl.exe --install <Distro>' para instalar.
+
+[127808 ms] Exit code 4294967295
+[130815 ms] Start: Run: wsl -l -v
+[130907 ms] Subsistema do Windows para Linux n�o tem distribui��es instaladas.
+Voc� pode resolve isso instalando uma distribui��o com as instru��es abaixo:
+
+Use 'wsl.exe --list --online' para listar distribui��es dispon�veis
+e 'wsl.exe --install <Distro>' para instalar.
+
+[130915 ms] Exit code 4294967295
