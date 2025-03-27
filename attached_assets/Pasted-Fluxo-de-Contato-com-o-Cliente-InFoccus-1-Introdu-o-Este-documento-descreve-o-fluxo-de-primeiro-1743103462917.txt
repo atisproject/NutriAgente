@@ -1,0 +1,213 @@
+Fluxo de Contato com o Cliente - InFoccus
+
+1. Introdução
+Este documento descreve o fluxo de primeiro contato com o cliente In Foccus, detalhando as etapas do atendimento, as mensagens enviadas e as regras para cada interação. O objetivo é padronizar a comunicação para otimizar o atendimento e facilitar a automação por meio de uma IA.
+
+2. Etapas do Fluxo de Contato
+Abaixo estão as principais etapas do contato com o cliente:
+Primeiro Contato [Boas-vindas] 
+Follow Up 1 Mensagem 
+Follow Up 2 Mensagem
+Envio de acesso Treino e Dieta
+Confirmação de acesso 
+
+3. Descrição das Atividades
+Primeiro Contato [Boas-vindas]  – Mensagem inicial de boas-vindas ao cliente após confirmação da compra, com envio de formulário de anamnese. São 4 mensagens. 
+Follow Up 1 [após 24h em caso de não resposta do formulário]: Acompanhamento caso não haja resposta do formulário.
+Follow Up 2  [12h após follow up 1 em caso de seguir sem resposta do formulário]: Acompanhamento de resposta ao formulário. 
+Envio de acesso Treino e Dieta – Envio das informações para acesso à dieta e ao treino e contato dos profissionais. 
+Confirmação de acesso – 24h depois do envio de acesso, para confirmar se o paciente conseguiu realizar o acesso. 
+
+
+
+4. Mensagens Padrão
+Abaixo estão os textos padrões para cada etapa do contato:
+Primeiro Contato [Boas-vindas]:
+Mensagem 1 
+🎯💪🏼  *Agora você faz parte do time da inFocus!*
+
+_[nome], é um prazer te dar as boas-vindas!_
+
+A partir de agora, você não estará sozinha na sua jornada, nem vai mais perder tempo e dinheiro com estratégias que não funcionam.
+
+Nos próximos meses, você será acompanhado por dois profissionais experientes, focados em criar a *melhor estratégia* para te aproximar dos seus objetivos… 
+
+🔥 … Com dietas fáceis de seguir e treinos personalizados, tudo baseado em ciência — _sem achismos!_
+
+Acredite, essa foi uma das melhores decisões que você poderia ter tomado por você.
+
+⬇️  *Agora, vamos às informações importantes…*
+
+
+
+
+
+
+Mensagem 2
+
+👇🏼  *Aqui está o link para o seu formulário de anamnese*
+
+É através dela que iremos te conhecer melhor, entender os seus objetivos e elaborar o seu plano de treino e dieta. 
+
+⚠️Recomendamos que você reserve um tempo para preenchê-lo com calma e com o máximo de detalhes possível.
+
+As fotos são MUITO importantes para que nossos profissionais possam avaliar a sua composição corporal.
+
+Junto com as informações do formulário, as fotos são ESSENCIAIS  para a elaboração das melhores estratégias para alcançar os seus objetivos. 
+
+Pois quanto mais preciso você for, mais personalizada será a estratégia, baseada no seu estilo de vida e metas.
+
+📎 Link anamnese 
+
+*p.s.:* _Após enviar o formulário, você receberá seu plano de treino e dieta nos aplicativos em até *72 horas*._
+
+
+
+
+
+
+Mensagem 3
+*Já aqui, estão as instruções de como você deverá nos enviar as suas fotos para fazermos comparativo de evolução* ⬇️
+
+*Já aqui, estão as instruções de como você deverá nos enviar as suas fotos para fazermos comparativo de evolução* ⬇️
+
+INSERIR LINK
+
+
+Mensagem 4
+
+*Por último, e não menos importante…*
+
+👇🏼 Salve os números dos nossos profissionais no seu celular:
+
+📲 *Personal Trainer*: [Número]
+📲 *Nutricionista*: [Número]
+
+_É por lá que você vai receber o suporte e o acompanhamento dos profissionais._
+
+
+
+
+Follow Up Mensagem após 24h [em caso de não resposta do formulário]: 
+
+👀 *Notamos que ainda não recebemos o seu formulário. Tudo certo por aí?*
+Opa! Vimos aqui no sistema que você ainda não enviou a sua _ficha de anamnese_ preenchida. 
+
+Lembrando que, quanto antes você preencher, mais rápido nossos profissionais poderão elaborar sua estratégia de dieta e treino, e dar início ao seu projeto.
+
+📎FICHA DE ANAMNESE
+
+Qualquer dúvida, estamos à disposição aqui no whatsapp.
+
+🎯_Equipe InFocus_
+
+
+
+
+Follow Up 2 Mensagem após 36h [12h após follow up 1, em caso de seguir sem resposta do formulário]:  
+
+*Aconteceu alguma coisa? Não vimos o seu nome aqui.*
+
+🚨 Este é um lembrete para reforçar a importância de enviar sua _ficha de anamnese_.
+
+Estamos prontos para iniciar seu plano de treino e dieta, mas sem suas informações, não conseguimos avançar. 
+
+Quanto mais cedo recebermos sua ficha, mais rápido iremos traçar sua estratégia personalizada e te acompanhar nessa jornada.
+
+👉Podemos contar com você para nos enviar até ____ às __ horas? 
+
+📎FICHA DE ANAMNESE
+
+🎯_Equipe InFocus_
+
+
+
+Envio de Treino e Dieta: 
+Mensagem 1: 
+
+🔥 *Tudo certo para começarmos? Veja seus próximos passos!*
+
+Estamos passando para avisar que o seu plano de dieta e treino já estão disponíveis na plataforma. 
+
+_Agora a meta é focar nos seus objetivos!_ 
+
+*Mas antes, atenção a alguns pontos importantes:*
+
+1️⃣Sua dieta e treino estão disponíveis em _aplicativos diferentes_. Um para a dieta, outro para o treino: *Webdiet (dieta) e MFIT (treino)*. 
+
+2️⃣As instruções para baixar os aplicativos e fazer o login estão no PDF abaixo. Siga o passo a passo.
+
+3️⃣ *Reavaliações mensais:* A cada mês, nossos profissionais vão revisar seu físico, evolução e objetivos para ajustar seu plano de dieta e treino do mês seguinte. 
+
+3️⃣Qualquer dúvida que você tiver sobre a dieta ou execução dos treinos, envie uma mensagem no whatsapp para os profissionais da nossa equipe 👇
+
+
+
+
+
+
+
+
+
+
+
+
+Mensagem 2:
+📲 *Personal Trainer*: [Número]
+📲 *Nutricionista*: [Número]
+
+Eles estão prontos para te dar todo o suporte de segunda a sexta, em até *24h*. 
+
+*p.s.:* _Já salva no seu celular para quando precisar._
+
+Conte com a gente em cada passo dessa jornada,
+🎯Equipe InFocus.
+
+
+
+Mensagem 3: 
+
+Envio do PDF com as instruções dos dois aplicativos. Se estiverem os dois juntos, melhor ainda, assim evita enviar muito documento no celular das pessoas. 
+
+Não enviar link, enviar documento direto***
+
+Passo a Passo MFIT: https://drive.google.com/file/d/1nGXuIVMEPzvAi2CQEatXfwQLkKZaKn1b/view?usp=drive_link
+
+Passo a Passo WEBDIET: https://drive.google.com/file/d/19Gpvs0CP-AKwF5GrEQtvIdQYHWHAr6f_/view?usp=drive_link 
+
+
+Mensagem de Confirmação de Acesso: 
+Opa, tudo bem? 
+
+
+Viemos só confirmar se deu certo com a sua dieta e treino... 
+
+✅Conseguiu baixar os aplicativos, fazer o login e acessar o seu plano? 
+
+_Caso contrário, estamos aqui para te ajudar!_ 
+
+
+
+
+
+5. Regras e Condições
+Primeiro Contato [Boas-vindas] - A primeira mensagem deve ser enviada logo após a confirmação da compra. No primeiro contato temos 4 mensagens que devem ser enviadas -definir se serão enviadas ao mesmo tempo ou com um “delay” de X segundos ou X minutos entre uma e outra-
+Follow Up 1 - O follow up 1 deve ser enviado 24 horas após a mensagem 4
+Follow Up 2 - O follow up 2 deve ser enviado 12h após o follow up 1 
+Envio de acesso Treino e Dieta - O treino e a dieta estarão prontos após 72h de resposta do formulário. Portanto, esta mensagem deve ser enviada após 72h de resposta ao formulário. 
+Confirmação de acesso - Envio da mensagem 24h após o Envio de acesso de Treino e Dieta para confirmar se o paciente conseguiu acessar os aplicativos. 
+
+Observações para Equipe InFoccus: 
+Preencha os detalhes das atividades (links principalmente).
+Acredito que devemos incluir uma mensagem no sentido de “você conseguiu respondeu ao seu formulário?” algumas horas depois da mensagem 4 de boas-vindas para a IA poder identificar quem responder que sim, não precisar fazer o follow up 1 e 2 e para quem não responder ou responder que ainda não ela saber que deve realizar o follow up. 
+Exemplo: 
+5h depois da mensagem 4 de boas vindas enviar mensagem no sentido “Você conseguiu responder ao seu formulário?” 
+SIM - Enviar mensagem agradecendo as respostas e informando que em breve a dieta e treino estarão disponíveis
+NÃO - Realizar follow up 1 e 2 
+Definir se vamos ter mais comunicações automáticas. De x em x dias perguntar algo ao paciente ou por exemplo a mensagem solicitando foto, definir mensagens e em que momento será enviada para incluir no fluxo da IA. (Se tiver definido enviar Jéssyca) 
+Criar mensagem para depois da “Confirmação de acesso” 
+Exemplo: 
+Se paciente responder que “sim consegui acessar meu plano” enviar mensagem parabenizando o acesso e informando que qualquer dúvida estamos à disposição. 
+Se paciente responder “não consegui acessar” enviar mensagem perguntando qual foi a dificuldade em acessar, foi o app do treino? Foi o app da Dieta? E enviar orientação específica dependendo de qual foi a dificuldade. 
+Para isso inclusive vou criar um documento separado, pois para alimentarmos a  inteligência da IA é importante que a gente tenha também descrito algumas informações como é realizada o primeiro acesso aos aplicativos, como é feita a recuperação de senha... (pensar em mais possibilidades de dificuldades que o paciente pode encontrar para descrever como é feito e deixar a IA com a inteligência necessária para orientar)  
+
